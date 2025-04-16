@@ -30,7 +30,8 @@ module PgEasyReplicate
 
   class << self
     def config(
-      special_user_role: nil,
+      source_special_user_role: nil,
+      destination_special_user_role: nil,
       copy_schema: false,
       tables: "",
       exclude_tables: "",
@@ -55,9 +56,9 @@ module PgEasyReplicate
 
           {
             source_db_is_super_user:
-              is_super_user?(source_db_url, special_user_role),
+              is_super_user?(source_db_url, source_special_user_role),
             target_db_is_super_user:
-              is_super_user?(target_db_url, special_user_role),
+              is_super_user?(target_db_url, destination_special_user_role),
             source_db:
               Query.run(
                 query: q,
@@ -85,7 +86,8 @@ module PgEasyReplicate
     end
 
     def assert_config(
-      special_user_role: nil,
+      source_special_user_role: nil,
+      destination_special_user_role: nil,
       copy_schema: false,
       tables: "",
       exclude_tables: "",
@@ -93,7 +95,8 @@ module PgEasyReplicate
     )
       config_hash =
         config(
-          special_user_role: special_user_role,
+          source_special_user_role: source_special_user_role,
+          destination_special_user_role: destination_special_user_role,
           copy_schema: copy_schema,
           tables: tables,
           exclude_tables: exclude_tables,
@@ -146,14 +149,14 @@ module PgEasyReplicate
       logger.info("Setting up replication user on source database")
       create_user(
         conn_string: source_db_url,
-        special_user_role: options[:special_user_role],
+        special_user_role: options[:source_special_user_role],
         grant_permissions_on_schema: true,
       )
 
       logger.info("Setting up replication user on target database")
       create_user(
         conn_string: target_db_url,
-        special_user_role: options[:special_user_role],
+        special_user_role: options[:destination_special_user_role],
       )
 
       logger.info("Setting up groups tables")

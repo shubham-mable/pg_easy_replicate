@@ -8,10 +8,14 @@ module PgEasyReplicate
 
     desc "config_check",
          "Prints if source and target database have the required config"
-    method_option :special_user_role,
-                  aliases: "-s",
+    method_option :source_special_user_role,
+                  aliases: "-ss",
                   desc:
-                    "Name of the role that has superuser permissions. Usually useful for AWS (rds_superuser) or GCP (cloudsqlsuperuser)."
+                    "Name of the role that has superuser permissions on source. Usually useful for AWS (rds_superuser) or GCP (cloudsqlsuperuser)."
+    method_option :destination_special_user_role,
+                  aliases: "-ds",
+                  desc:
+                    "Name of the role that has superuser permissions on destination. Usually useful for AWS (rds_superuser) or GCP (cloudsqlsuperuser)."
     method_option :copy_schema,
                   aliases: "-c",
                   boolean: true,
@@ -32,7 +36,8 @@ module PgEasyReplicate
                     "Name of the schema tables are in, only required if passing list of tables"
     def config_check
       PgEasyReplicate.assert_config(
-        special_user_role: options[:special_user_role],
+        source_special_user_role: options[:source_special_user_role],
+        destination_special_user_role: options[:destination_special_user_role],
         copy_schema: options[:copy_schema],
         tables: options[:tables],
         exclude_tables: options[:exclude_tables],
@@ -46,10 +51,14 @@ module PgEasyReplicate
                   aliases: "-g",
                   required: true,
                   desc: "Name of the group to provision"
-    method_option :special_user_role,
-                  aliases: "-s",
+    method_option :source_special_user_role,
+                  aliases: "-ss",
                   desc:
-                    "Name of the role that has superuser permissions. Usually useful with AWS (rds_superuser) or GCP (cloudsqlsuperuser)."
+                    "Name of the role that has superuser permissions on source. Usually useful with AWS (rds_superuser) or GCP (cloudsqlsuperuser)."
+    method_option :destination_special_user_role,
+                  aliases: "-ds",
+                  desc:
+                    "Name of the role that has superuser permissions on destination. Usually useful with AWS (rds_superuser) or GCP (cloudsqlsuperuser)."
     method_option :copy_schema,
                   aliases: "-c",
                   boolean: true,

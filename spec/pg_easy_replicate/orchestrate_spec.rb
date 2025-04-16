@@ -774,7 +774,7 @@ RSpec.describe(PgEasyReplicate::Orchestrate) do
       setup_tables("james-bond_role_regular")
 
       PgEasyReplicate.assert_config(
-        special_user_role: "james-bond_super_role",
+        source_special_user_role: "james-bond_super_role",
         schema_name: test_schema,
       )
       PgEasyReplicate.bootstrap(
