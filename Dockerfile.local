@@ -1,0 +1,34 @@
+FROM ruby:3.3.6-slim
+
+# Install dependencies for PostgreSQL and gem building
+RUN apt-get update && \
+  apt-get install -y --no-install-recommends \
+  wget \
+  gnupg2 \
+  lsb-release \
+  build-essential \
+  libpq-dev \
+  git \
+  && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor -o /usr/share/keyrings/postgresql-keyring.gpg && \
+  echo "deb [signed-by=/usr/share/keyrings/postgresql-keyring.gpg] http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list && \
+  apt-get update && \
+  apt-get install -y --no-install-recommends postgresql-client
+
+# Create a working directory
+WORKDIR /gem
+
+# Copy the local gem source
+COPY . /gem/
+
+# Build and install the gem locally
+RUN gem build pg_easy_replicate.gemspec && \
+    gem install ./pg_easy_replicate-*.gem && \
+    # Clean up
+    apt-get remove -y wget gnupg2 lsb-release && \
+    apt-get autoremove -y && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# Verify installation
+RUN pg_dump --version
+RUN pg_easy_replicate version

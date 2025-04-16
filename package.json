@@ -2,7 +2,7 @@
   "name": "pg-osc",
   "version": "1.0.0",
   "main": "index.js",
-  "repository": "git@github.com:shayonj/pg-osc.git",
+  "repository": "git@github.com:shubham-mable/pg-osc.git",
   "author": "Shayon Mukherjee <shayonj@gmail.com>",
   "license": "MIT",
   "private": true,
